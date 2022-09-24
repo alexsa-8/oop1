@@ -8,22 +8,13 @@ public class car {
     int productionYear;
     String productionCountry;
 
-    car(String brand, String model, double engineVolume, String color, int productionYear, String productionCountry) {
+    car(String brand, String model, Double engineVolume, String color, Integer productionYear, String productionCountry) {
         this.brand= Objects.requireNonNullElse(brand,"default");
         this.model=Objects.requireNonNullElse(model,"default");
-        this.engineVolume=engineVolume;
+        this.engineVolume=Objects.requireNonNullElse(engineVolume, 1.5);
         this.color=Objects.requireNonNullElse(color,"default");
-        this.productionYear=productionYear;
+        this.productionYear=Objects.requireNonNullElse(productionYear, 2000);
         this.productionCountry=Objects.requireNonNullElse(productionCountry,"default");
-    }
-    car(String brand, String model, String color, int productionYear, String productionCountry){
-        this(brand, model, 1.5, color, productionYear, productionCountry);
-    }
-    car(String brand, String model, double engineVolume, int productionYear, String productionCountry){
-        this(brand, model, engineVolume, "белый", productionYear, productionCountry);
-    }
-    car(String brand, String model, double engineVolume, String color, String productionCountry){
-        this(brand, model, engineVolume, color, 2000, productionCountry);
     }
 
     void messageCar(){
