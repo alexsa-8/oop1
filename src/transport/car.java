@@ -7,7 +7,66 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class car {
-    private final String brand;
+
+    public void messageKey() {
+
+    }
+
+    public record Key(String remoteEngineStart, String keylessAccess) {
+            public Key(String remoteEngineStart, String keylessAccess) {
+                this.remoteEngineStart = Objects.requireNonNullElse(remoteEngineStart, "default");
+                this.keylessAccess = Objects.requireNonNullElse(keylessAccess, "default");
+            }
+
+            public void messageKey() {
+                System.out.println(" удалённый запуск двигателя: " + remoteEngineStart +
+                        ", бесключевой доступ: " + keylessAccess + " .");
+            }
+        }
+
+    public static class Insurance {
+        private Serializable validityPeriod;
+        private final double cost;
+        private String number;
+
+        public Insurance(Serializable validityPeriod, double cost, String number) {
+            this.validityPeriod = validityPeriod;
+            this.cost = cost;
+            setNumber(number);
+        }
+
+        public void messageInsurance() {
+            System.out.println(", срок действия страховки: " + validityPeriod +
+                    ", стоимость страховки: " + cost + ", номер страховки: " + number + ".");
+        }
+
+        public Serializable getValidityPeriod() {
+            return validityPeriod;
+        }
+
+        public void setValidityPeriod(Serializable validityPeriod) {
+            this.validityPeriod = validityPeriod;
+        }
+
+        public double getCost() {
+            return cost;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public void setNumber(String number) {
+            Matcher number1 = java.util.regex.Pattern.compile("\\d\\d\\d\\d\\d\\d\\d\\d\\d\\d").matcher(number);
+            if (number1.find()) {
+                this.number = number;
+            } else {
+                this.number = " некорректный номер ";
+            }
+        }
+    }
+
+    private  final String brand;
     private final String model;
     private final String productionCountry;
     private final int productionYear;
@@ -19,6 +78,9 @@ public class car {
     String registrationNumber;
     String rubber;
     private Pattern Pattern;
+    private Key key;
+    private Insurance insurance;
+
     public car(String brand, String model, double engineVolume, String color, int productionYear,
                String productionCountry, String bodyType, int numberOfSeats, String transmission,
                String registrationNumber, String rubber) {
@@ -39,7 +101,8 @@ public class car {
         System.out.println("Марка: " + brand + ", модель: " + model + ", тип кузова: " + bodyType + ", цвет кузова: "
                 + color + ", посадочных мест: " + numberOfSeats + ", объём двигателя: " + engineVolume +
                 ", коробка передач: " + transmission + ", год выпуска: " + productionYear + ", страна сборки: "
-                + productionCountry + ", регистрационный номер: " + registrationNumber + ", резина: " + rubber + ".");
+                + productionCountry + ", регистрационный номер: " + registrationNumber + ", резина: " + rubber +
+                ".");
     }
 
     public String getBrand() {
@@ -121,6 +184,5 @@ public class car {
         } else {
             this.rubber = Objects.requireNonNullElse(rubber, "default");
         }
-        //System.out.println("Месяц: " + calendar.get(Calendar.MONTH));
     }
 }
