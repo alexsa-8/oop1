@@ -1,4 +1,5 @@
 package transport;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -6,23 +7,28 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class car {
+public class Car extends Transport {
 
     public void messageKey() {
 
     }
 
-    public record Key(String remoteEngineStart, String keylessAccess) {
-            public Key(String remoteEngineStart, String keylessAccess) {
-                this.remoteEngineStart = Objects.requireNonNullElse(remoteEngineStart, "default");
-                this.keylessAccess = Objects.requireNonNullElse(keylessAccess, "default");
-            }
+    @Override
+    public void refill() {
+        System.out.println("Необходимо заправить автомобиль топливом.");
+    }
 
-            public void messageKey() {
-                System.out.println(" удалённый запуск двигателя: " + remoteEngineStart +
-                        ", бесключевой доступ: " + keylessAccess + " .");
-            }
+    public record Key(String remoteEngineStart, String keylessAccess) {
+        public Key(String remoteEngineStart, String keylessAccess) {
+            this.remoteEngineStart = Objects.requireNonNullElse(remoteEngineStart, "default");
+            this.keylessAccess = Objects.requireNonNullElse(keylessAccess, "default");
         }
+
+        public void messageKey() {
+            System.out.println("Удалённый запуск двигателя: " + remoteEngineStart +
+                    ", бесключевой доступ: " + keylessAccess + ".");
+        }
+    }
 
     public static class Insurance {
         private Serializable validityPeriod;
@@ -36,8 +42,10 @@ public class car {
         }
 
         public void messageInsurance() {
-            System.out.println(", срок действия страховки: " + validityPeriod +
-                    ", стоимость страховки: " + cost + ", номер страховки: " + number + ".");
+            System.out.print("Срок действия страховки: " + validityPeriod +
+                    ", стоимость страховки: ");
+            System.out.printf("%.2f", cost);
+            System.out.println(" руб., № страховки: " + number + ".");
         }
 
         public Serializable getValidityPeriod() {
@@ -66,14 +74,9 @@ public class car {
         }
     }
 
-    private  final String brand;
-    private final String model;
-    private final String productionCountry;
-    private final int productionYear;
     private final String bodyType;
     private final Serializable numberOfSeats;
     double engineVolume;
-    String color;
     String transmission;
     String registrationNumber;
     String rubber;
@@ -81,15 +84,12 @@ public class car {
     private Key key;
     private Insurance insurance;
 
-    public car(String brand, String model, double engineVolume, String color, int productionYear,
-               String productionCountry, String bodyType, int numberOfSeats, String transmission,
-               String registrationNumber, String rubber) {
-        this.brand = Objects.requireNonNullElse(brand, "default");
-        this.model = Objects.requireNonNullElse(model, "default");
+
+    public Car(String brand, String model, double engineVolume, String bodyColor, int yearOfRelease,
+               String countryOfProduction, String bodyType, int numberOfSeats, String transmission,
+               String registrationNumber, String rubber, int maxMovementSpeed) {
+        super(brand, model, yearOfRelease, countryOfProduction, bodyColor, maxMovementSpeed);
         setEngineVolume(engineVolume);
-        setColor(color);
-        this.productionYear = Objects.requireNonNullElse(productionYear, 2000);
-        this.productionCountry = Objects.requireNonNullElse(productionCountry, "default");
         this.bodyType = Objects.requireNonNullElse(bodyType, "default");
         this.numberOfSeats = Objects.requireNonNullElse(numberOfSeats, "default");
         setTransmission(transmission);
@@ -99,26 +99,10 @@ public class car {
 
     public void messageCar() {
         System.out.println("Марка: " + brand + ", модель: " + model + ", тип кузова: " + bodyType + ", цвет кузова: "
-                + color + ", посадочных мест: " + numberOfSeats + ", объём двигателя: " + engineVolume +
-                ", коробка передач: " + transmission + ", год выпуска: " + productionYear + ", страна сборки: "
-                + productionCountry + ", регистрационный номер: " + registrationNumber + ", резина: " + rubber +
-                ".");
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public String getProductionCountry() {
-        return productionCountry;
-    }
-
-    public int getProductionYear() {
-        return productionYear;
+                + bodyColor + ", посадочных мест: " + numberOfSeats + ", объём двигателя: " + engineVolume +
+                ", \nкоробка передач: " + transmission + ", год выпуска: " + getYearOfRelease() + ", страна сборки: "
+                + getCountryOfProduction() + ", регистрационный номер: " + registrationNumber + ", \nрезина: " + rubber +
+                ", максимальная скорость: " + maxMovementSpeed + " км/ч.");
     }
 
     public String getBodyType() {
@@ -139,14 +123,6 @@ public class car {
         } else {
             this.engineVolume = engineVolume;
         }
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = Objects.requireNonNullElse(color, "default");
     }
 
     public String getTransmission() {
